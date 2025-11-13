@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> The Daily Topic : German Corruption Quiz</title>
+    <style>
+        :root {
+            --newspaper-cream: #f8f5f0;
+            --newspaper-brown: #5d4037;
+            --newspaper-dark: #3e2723;
+            --newspaper-light: #8d6e63;
+            --newspaper-tan: #a1887f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        body {
+            background-color: #e0e0e0;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><text x="0" y="50" font-family="Times New Roman" font-size="14">The Daily Integrity</text></svg>');
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--newspaper-cream);
+            border: 1px solid var(--newspaper-brown);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background-color: var(--newspaper-brown);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--newspaper-dark);
+            position: relative;
+        }
+        
+        .header::before, .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            height: 2px;
+            background-color: var(--newspaper-dark);
+        }
+        
+        .header::before {
+            left: 0;
+            width: 30%;
+        }
+        
+        .header::after {
+            right: 0;
+            width: 30%;
+        }
+        
+        .newspaper-title {
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: Georgia, serif;
+        }
+        
+        .newspaper-subtitle {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            font-style: italic;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            padding-top: 8px;
+            display: inline-block;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .screen {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--newspaper-brown);
+            font-size: 1.1rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background-color: white;
+            border: 1px solid var(--newspaper-tan);
+            border-radius: 2px;
+            color: #333;
+            font-size: 1rem;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--newspaper-brown);
+            box-shadow: 0 0 3px rgba(93, 64, 55, 0.5);
+        }
+        
+        .btn {
+            background-color: var(--newspaper-brown);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 10px;
+            font-family: Georgia, serif;
+        }
+        
+        .btn:hover {
+            background-color: var(--newspaper-dark);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .question-container {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid var(--newspaper-tan);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .question-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--newspaper-brown);
+        }
+        
+        .question-number {
+            font-size: 1.1rem;
+            color: var(--newspaper-brown);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            border-bottom: 1px dashed var(--newspaper-tan);
+            padding-bottom: 8px;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-family: Georgia, serif;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            padding: 15px;
+            background-color: white;
+            border: 1px solid var(--newspaper-tan);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.05rem;
+        }
+        
+        .option:hover {
+            background-color: #f5f2ec;
+            border-color: var(--newspaper-light);
+        }
+        
+        .option.selected {
+            background-color: rgba(93, 64, 55, 0.1);
+            border-color: var(--newspaper-brown);
+            box-shadow: 0 1px 3px rgba(93, 64, 55, 0.2);
+        }
+        
+        .option.correct {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-color: #4CAF50;
+        }
+        
+        .option.incorrect {
+            background-color: rgba(244, 67, 54, 0.1);
+            border-color: #F44336;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .results-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .score-display {
+            font-size: 3rem;
+            color: var(--newspaper-brown);
+            margin: 20px 0;
+            font-weight: bold;
+            font-family: Georgia, serif;
+        }
+        
+        .score-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .admin-panel {
+            margin-top: 30px;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid var(--newspaper-tan);
+        }
+        
+        .admin-table th, .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--newspaper-tan);
+        }
+        
+        .admin-table th {
+            background-color: var(--newspaper-brown);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .admin-table tr:nth-child(even) {
+            background-color: rgba(141, 110, 99, 0.05);
+        }
+        
+        .admin-table tr:hover {
+            background-color: rgba(141, 110, 99, 0.1);
+        }
+        
+        .rank-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--newspaper-light);
+            color: white;
+            border-radius: 2px;
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .newspaper-columns {
+            column-count: 2;
+            column-gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .newspaper-text {
+            text-align: justify;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .newspaper-headline {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--newspaper-brown);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--newspaper-tan);
+            padding-bottom: 5px;
+            font-family: Georgia, serif;
+        }
+        
+        .byline {
+            font-style: italic;
+            color: var(--newspaper-light);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: var(--newspaper-brown);
+            opacity: 0;
+            z-index: 1000;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 600px) {
+            .newspaper-columns {
+                column-count: 1;
+            }
+            
+            .newspaper-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="newspaper-title">The Daily Integrity</div>
+            <div class="newspaper-subtitle">Truth in Governance Since 2023</div>
+        </div>
+        
+        <div class="content">
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="screen active">
+                <div class="newspaper-headline">Special Edition: Corruption in Germany</div>
+                <div class="byline">By our Political Affairs Desk</div>
+                
+                <div class="newspaper-columns">
+                    <div class="newspaper-text">
+                        Welcome, reader. In today's special edition, we present a comprehensive quiz on corruption and integrity in Germany's political history.
+                    </div>
+                    <div class="newspaper-text">
+                        Test your knowledge of how Germany has confronted corruption from the post-war era to the present day. Answer all questions to receive your reader score.
+                    </div>
+                    <div class="newspaper-text">
+                        Based on the works of Ulrich von Alemann and Sebastian Wolf, this quiz explores the evolution of Germany's approach to political integrity.
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="player-name">Enter Your Name:</label>
+                    <input type="text" id="player-name" placeholder="e.g., John Smith" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="player-title">Select Your Title:</label>
+                    <select id="player-title">
+                        <option value="Reader">Reader</option>
+                        <option value="Correspondent">Correspondent</option>
+                        <option value="Editor">Editor</option>
+                        <option value="Publisher">Publisher</option>
+                    </select>
+                </div>
+                
+                <button id="start-btn" class="btn btn-block">Begin Quiz</button>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <button id="admin-btn" class="btn">Editorial Access</button>
+                </div>
+            </div>
+            
+            <!-- Quiz Screen -->
+            <div id="quiz-screen" class="screen">
+                <div class="question-number">
+                    <span>Question <span id="current-question">1</span> of <span id="total-questions">10</span></span>
+                    <span>Score: <span id="current-score">0</span></span>
+                </div>
+                
+                <div class="question-container">
+                    <div class="question-text" id="question-text"></div>
+                    <div class="options" id="options-container"></div>
+                </div>
+                
+                <div class="navigation">
+                    <button id="prev-btn" class="btn">Previous</button>
+                    <button id="next-btn" class="btn">Next</button>
+                </div>
+            </div>
+            
+            <!-- Results Screen -->
+            <div id="results-screen" class="screen">
+                <div class="results-container">
+                    <div class="newspaper-headline">Quiz Results</div>
+                    <p id="player-info"></p>
+                    <div class="score-display" id="final-score">0/10</div>
+                    <div class="score-text" id="score-message"></div>
+                    
+                    <div style="margin: 30px 0;">
+                        <button id="restart-btn" class="btn">Take Quiz Again</button>
+                        <button id="view-scores-btn" class="btn">View All Scores</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Admin Screen -->
+            <div id="admin-screen" class="screen">
+                <div class="newspaper-headline">Editorial Dashboard - Reader Scores</div>
+                <p>Access all quiz results and reader performance data.</p>
+                
+                <div class="admin-panel">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Name</th>
+                                <th>Score</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scores-table">
+                            <!-- Scores will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <button id="back-to-welcome" class="btn">Return to Front Page</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions based on the presentation about corruption in Germany
+        const quizQuestions = [
+            {
+                question: "According to Ulrich von Alemann, how was corruption in Germany viewed in the latter half of the 20th century?",
+                options: [
+                    "As a 'soft' problem, sometimes tolerated",
+                    "As the most serious threat to democracy",
+                    "As a non-issue in German politics",
+                    "As exclusively a legal problem"
+                ],
+                correct: 0
+            },
+            {
+                question: "What was a critical turning point that forced a re-evaluation of corruption in Germany?",
+                options: [
+                    "The fall of the Berlin Wall",
+                    "High-profile scandals in the 1990s",
+                    "The election of Chancellor Merkel",
+                    "Pressure from the European Union"
+                ],
+                correct: 1
+            },
+            {
+                question: "According to Sebastian Wolf, what characterized Germany's anti-corruption approach during the Merkel era?",
+                options: [
+                    "Reaction to a single major domestic scandal",
+                    "Focus on international bribery only",
+                    "Strategic policy evolution driven by multiple factors",
+                    "Complete overhaul of the political system"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which of these is NOT part of Germany's modern anti-corruption framework?",
+                options: [
+                    "The German Criminal Code (StGB)",
+                    "Federal Court of Auditors (Bundesrechnungshof)",
+                    "International anti-corruption conventions",
+                    "A state-controlled media system"
+                ],
+                correct: 3
+            },
+            {
+                question: "What shift occurred in Germany's approach to corruption from the 1990s to today?",
+                options: [
+                    "From proactive prevention to reactive scandal management",
+                    "From national focus to global engagement",
+                    "From legal measures to exclusively cultural solutions",
+                    "From transparency to confidentiality in government dealings"
+                ],
+                correct: 1
+            },
+            {
+                question: "What role did 'policy entrepreneurs' play in Germany's anti-corruption efforts according to Wolf?",
+                options: [
+                    "They created corruption for personal gain",
+                    "They kept the anti-corruption issue on the government agenda",
+                    "They opposed all anti-corruption measures",
+                    "They focused solely on international policies"
+                ],
+                correct: 1
+            },
+            {
+                question: "In the context of German anti-corruption efforts, what does the OECD Anti-Bribery Convention represent?",
+                options: [
+                    "A domestic German law from the 1980s",
+                    "An international agreement that influenced German policy",
+                    "A failed attempt at global corruption regulation",
+                    "A Merkel-era initiative with no international impact"
+                ],
+                correct: 1
+            },
+            {
+                question: "How has Germany's perception of corruption changed over time?",
+                options: [
+                    "From a peripheral issue to a central threat to public trust",
+                    "From a serious crime to a minor administrative issue",
+                    "From a cultural problem to exclusively an economic one",
+                    "No significant change has occurred"
+                ],
+                correct: 0
+            },
+            {
+                question: "What is a key challenge Germany faces in its current anti-corruption efforts?",
+                options: [
+                    "Preventing foreign bribery by German corporations",
+                    "Eliminating all corruption within its borders completely",
+                    "Reducing the number of anti-corruption laws",
+                    "Focusing only on political corruption, not corporate"
+                ],
+                correct: 0
+            },
+            {
+                question: "What does the German case demonstrate about fighting corruption?",
+                options: [
+                    "It's a battle that can be completely won with the right laws",
+                    "It requires constant vigilance and adaptation",
+                    "It's primarily an economic, not political, issue",
+                    "International cooperation is unnecessary"
+                ],
+                correct: 1
+            }
+        ];
+
+        // Game state
+        let currentQuestion = 0;
+        let score = 0;
+        let playerName = "";
+        let playerTitle = "";
+        let userAnswers = new Array(quizQuestions.length).fill(null);
+        let allScores = JSON.parse(localStorage.getItem('corruptionQuizScores')) || [];
+
+        // DOM elements
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const adminScreen = document.getElementById('admin-screen');
+
+        const playerNameInput = document.getElementById('player-name');
+        const playerTitleSelect = document.getElementById('player-title');
+        const startBtn = document.getElementById('start-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const viewScoresBtn = document.getElementById('view-scores-btn');
+        const adminBtn = document.getElementById('admin-btn');
+        const backToWelcomeBtn = document.getElementById('back-to-welcome');
+
+        const currentQuestionEl = document.getElementById('current-question');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const currentScoreEl = document.getElementById('current-score');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const finalScoreEl = document.getElementById('final-score');
+        const scoreMessageEl = document.getElementById('score-message');
+        const playerInfoEl = document.getElementById('player-info');
+        const scoresTableEl = document.getElementById('scores-table');
+
+        // Initialize the quiz
+        function initQuiz() {
+            totalQuestionsEl.textContent = quizQuestions.length;
+            currentScoreEl.textContent = score;
+            showQuestion();
+        }
+
+        // Show current question
+        function showQuestion() {
+            const question = quizQuestions[currentQuestion];
+            currentQuestionEl.textContent = currentQuestion + 1;
+            questionTextEl.textContent = question.question;
+            
+            optionsContainerEl.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                if (userAnswers[currentQuestion] === index) {
+                    optionEl.classList.add('selected');
+                }
+                optionEl.textContent = option;
+                optionEl.addEventListener('click', () => selectOption(index));
+                optionsContainerEl.appendChild(optionEl);
+            });
+            
+            updateNavigation();
+        }
+
+        // Select an option
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestion] = optionIndex;
+            
+            // Update UI to show selected option
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                option.classList.remove('selected');
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            // Check if answer is correct and update score
+            if (optionIndex === quizQuestions[currentQuestion].correct) {
+                // Only add to score if this question wasn't already answered correctly
+                if (userAnswers[currentQuestion] !== quizQuestions[currentQuestion].correct) {
+                    score++;
+                    currentScoreEl.textContent = score;
+                }
+            } else {
+                // If changing from a correct answer to incorrect, decrease score
+                if (userAnswers[currentQuestion] === quizQuestions[currentQuestion].correct) {
+                    score--;
+                    currentScoreEl.textContent = score;
+                }
+            }
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            prevBtn.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === quizQuestions.length - 1) {
+                nextBtn.textContent = 'Submit Answers';
+            } else {
+                nextBtn.textContent = 'Next Question';
+            }
+        }
+
+        // Show results
+        function showResults() {
+            // Calculate final score
+            let finalScore = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === quizQuestions[index].correct) {
+                    finalScore++;
+                }
+            });
+            
+            // Save score
+            const playerData = {
+                name: playerName,
+                title: playerTitle,
+                score: finalScore,
+                total: quizQuestions.length,
+                date: new Date().toLocaleDateString()
+            };
+            
+            allScores.push(playerData);
+            localStorage.setItem('corruptionQuizScores', JSON.stringify(allScores));
+            
+            // Display results
+            finalScoreEl.textContent = `${finalScore}/${quizQuestions.length}`;
+            playerInfoEl.textContent = `${playerTitle} ${playerName}`;
+            
+            // Score message based on performance
+            if (finalScore === quizQuestions.length) {
+                scoreMessageEl.textContent = "Perfect score! You've demonstrated exceptional knowledge of the subject.";
+                scoreMessageEl.classList.add('pulse');
+                createConfetti();
+            } else if (finalScore >= quizQuestions.length * 0.8) {
+                scoreMessageEl.textContent = "Excellent performance! You're well-informed on this topic.";
+            } else if (finalScore >= quizQuestions.length * 0.6) {
+                scoreMessageEl.textContent = "Good work. You have a solid understanding of the material.";
+            } else {
+                scoreMessageEl.textContent = "Consider reviewing the material and trying again.";
+            }
+            
+            quizScreen.classList.remove('active');
+            resultsScreen.classList.add('active');
+        }
+
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#5d4037', '#8d6e63', '#a1887f', '#3e2723'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Show admin screen with all scores
+        function showAdminScreen() {
+            scoresTableEl.innerHTML = '';
+            
+            // Sort scores by score (descending)
+            const sortedScores = [...allScores].sort((a, b) => b.score - a.score);
+            
+            if (sortedScores.length === 0) {
+                scoresTableEl.innerHTML = '<tr><td colspan="4" style="text-align: center;">No quiz results available</td></tr>';
+                return;
+            }
+            
+            sortedScores.forEach((scoreData, index) => {
+                const row = document.createElement('tr');
+                
+                // Add rank badge for top 3
+                let rankBadge = '';
+                if (index === 0) rankBadge = '<span class="rank-badge">TOP READER</span>';
+                else if (index === 1) rankBadge = '<span class="rank-badge">DISTINGUISHED</span>';
+                else if (index === 2) rankBadge = '<span class="rank-badge">NOTABLE</span>';
+                
+                row.innerHTML = `
+                    <td>${scoreData.title} ${rankBadge}</td>
+                    <td>${scoreData.name}</td>
+                    <td>${scoreData.score}/${scoreData.total}</td>
+                    <td>${getPerformanceText(scoreData.score/scoreData.total)}</td>
+                `;
+                scoresTableEl.appendChild(row);
+            });
+            
+            welcomeScreen.classList.remove('active');
+            adminScreen.classList.add('active');
+        }
+
+        // Get performance text based on score percentage
+        function getPerformanceText(percentage) {
+            if (percentage === 1) return 'Perfect Score';
+            if (percentage >= 0.9) return 'Outstanding';
+            if (percentage >= 0.8) return 'Excellent';
+            if (percentage >= 0.7) return 'Good';
+            if (percentage >= 0.6) return 'Satisfactory';
+            return 'Needs Improvement';
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', () => {
+            if (playerNameInput.value.trim() === '') {
+                alert('Please enter your name to proceed.');
+                return;
+            }
+            
+            playerName = playerNameInput.value.trim();
+            playerTitle = playerTitleSelect.value;
+            
+            welcomeScreen.classList.remove('active');
+            quizScreen.classList.add('active');
+            
+            initQuiz();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < quizQuestions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        restartBtn.addEventListener('click', () => {
+            // Reset game state
+            currentQuestion = 0;
+            score = 0;
+            userAnswers.fill(null);
+            
+            resultsScreen.classList.remove('active');
+            welcomeScreen.classList.add('active');
+        });
+
+        viewScoresBtn.addEventListener('click', () => {
+            resultsScreen.classList.remove('active');
+            adminScreen.classList.add('active');
+            showAdminScreen();
+        });
+
+        adminBtn.addEventListener('click', () => {
+            welcomeScreen.classList.remove('active');
+            adminScreen.classList.add('active');
+            showAdminScreen();
+        });
+
+        backToWelcomeBtn.addEventListener('click', () => {
+            adminScreen.classList.remove('active');
+            welcomeScreen.classList.add('active');
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Any additional initialization code can go here
+        });
+    </script>
+</body>
+</html>
